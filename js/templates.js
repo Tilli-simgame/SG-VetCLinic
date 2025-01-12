@@ -1,14 +1,19 @@
-// Template for checkbox
-function createCheckboxTemplate(type) {
+// Template for breed selection
+function createBreedSelectionTemplate() {
   return `
-      <label class="flex items-center space-x-2">
-          <input type="checkbox" id="${type.id}-check" class="w-4 h-4" checked>
-          <span>${type.name}</span>
-      </label>
+      <div class="mb-6">
+          <label class="block text-sm font-medium text-gray-700 mb-2">Valitse rotu:</label>
+          <select id="breed-select" class="w-full p-2 border rounded-md">
+              <option value="">Oletus</option>
+              ${Object.entries(breedWeights).map(([key, rotu]) => 
+                  `<option value="${key}">${rotu.nimi}</option>`
+              ).join('')}
+          </select>
+      </div>
   `;
 }
 
-// Main layout template
+// Template for results layout
 function createResultsTemplate() {
   return `
       <div class="mb-8">
@@ -67,5 +72,15 @@ function createSingleInterpretationTemplate(type) {
           <h4 class="font-medium">${type.name}:</h4>
           <div class="text-gray-600 pl-4" id="${type.id}-tulkinta"></div>
       </div>
+  `;
+}
+
+// Template for checkbox
+function createCheckboxTemplate(type) {
+  return `
+      <label class="flex items-center space-x-2">
+          <input type="checkbox" id="${type.id}-check" class="w-4 h-4" checked>
+          <span>${type.name}</span>
+      </label>
   `;
 }
