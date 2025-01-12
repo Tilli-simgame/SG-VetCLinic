@@ -40,11 +40,13 @@ cd SG-VetCLinic
 ```
 SG-VetCLinic/
 │
-├── index.html          # Päätiedosto
+├── index.html             # Päätiedosto
 ├── js/
-│   ├── app.js         # Sovelluksen päälogiikka
-│   ├── data.js        # Vakiodatat ja tulkinnat
-│   └── templates.js   # HTML-templatet
+│   ├── app.js             # Sovelluksen päälogiikka
+│   ├── data.js            # Vakiodatat ja tulkinnat
+│   └── templates.js       # HTML-templatet
+│   ├── defaultWeights.js  # Oletuspainotukset
+│   └── breedWeights.js    # Rotukohtaiset painotukset
 │
 └── README.md
 ```
