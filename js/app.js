@@ -15,11 +15,18 @@ function painotettuSatunnainen(arvot) {
 
 // Result generation functions
 function generoiYksittäinenNivelTulos() {
-  return arvostelut.nivelArvot[Math.floor(Math.random() * arvostelut.nivelArvot.length)];
+  const tulos = painotettuSatunnainen(arvostelut.nivelArvot);
+  return tulos.tulos;  // Palautetaan vain tulos-kenttä
 }
 
 function generoiYksittäinenLonkkaTulos() {
-  return arvostelut.lonkkaArvot[Math.floor(Math.random() * arvostelut.lonkkaArvot.length)];
+  const tulos = painotettuSatunnainen(arvostelut.lonkkaArvot);
+  return tulos.tulos;  // Palautetaan vain tulos-kenttä
+}
+
+function generoiSelkäTulos() {
+  const tulos = painotettuSatunnainen(arvostelut.selkäArvot);
+  return tulos.tulos;  // Palautetaan vain tulos-kenttä
 }
 
 function generoiSilmäTulos() {
@@ -57,7 +64,6 @@ function generoiGeeniTulos() {
 }
 
 // Result setting functions
-// Modified result setting functions
 function asetaNivelTulokset(tyyppi) {
   const vasen = generoiYksittäinenNivelTulos();
   const oikea = generoiYksittäinenNivelTulos();
@@ -89,7 +95,7 @@ function asetaTulokset(tyyppi) {
           break;
           
       case 'selkä':
-          const selkäTulos = arvostelut.selkäArvot[Math.floor(Math.random() * arvostelut.selkäArvot.length)];
+          const selkäTulos = generoiSelkäTulos();
           document.getElementById('selkä').textContent = selkäTulos;
           document.getElementById('selkä-tulkinta').textContent = tulkinnat.selkä[selkäTulos];
           break;
