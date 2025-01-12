@@ -23,7 +23,7 @@ const breedWeights = {
   },
   
   "kultainennoutaja": {
-      nimi: "Kultainen noutaja",
+      nimi: "Kultainennoutaja",
       lonkkaArvot: [
           { tulos: 'A', todennäköisyys: 30 },
           { tulos: 'B', todennäköisyys: 35 },
