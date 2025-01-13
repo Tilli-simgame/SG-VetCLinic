@@ -44,7 +44,7 @@ SG-VetCLinic/
 ├── js/
 │   ├── app.js             # Sovelluksen päälogiikka
 │   ├── data.js            # Vakiodatat ja tulkinnat
-│   └── templates.js       # HTML-templatet
+│   ├── templates.js       # HTML-templatet
 │   ├── defaultWeights.js  # Oletuspainotukset
 │   └── breedWeights.js    # Rotukohtaiset painotukset
 │

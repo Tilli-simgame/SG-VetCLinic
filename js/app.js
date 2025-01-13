@@ -23,13 +23,92 @@ function painotettuSatunnainen(testiTyyppi) {
     return arvot[0];
 }
 
+function laskeVanhempienVaikutusLonkkiin(puoli) {
+    const isänVasen = document.getElementById('father-hips-left').value;
+    const isänOikea = document.getElementById('father-hips-right').value;
+    const emänVasen = document.getElementById('mother-hips-left').value;
+    const emänOikea = document.getElementById('mother-hips-right').value;
+    
+    // Valitaan puolen mukaan oikeat arvot
+    const isänLonkka = puoli === 'vasen' ? isänVasen : isänOikea;
+    const emänLonkka = puoli === 'vasen' ? emänVasen : emänOikea;
+    
+    if (!isänLonkka && !emänLonkka) return null; // Ei vanhempien tietoja
+    
+    // Lonkka-arvojen "numeroarvot" laskentaa varten
+    const lonkkaArvot = { 'A': 0, 'B': 1, 'C': 2, 'D': 3, 'E': 4 };
+    const käänteisArvot = ['A', 'B', 'C', 'D', 'E'];
+    
+    let painotukset = { A: 0, B: 0, C: 0, D: 0, E: 0 };
+    
+    if (isänLonkka && emänLonkka) {
+        // Jos molemmat tiedossa, lasketaan keskiarvo ja painotetaan sen ympärille
+        const keskiarvo = (lonkkaArvot[isänLonkka] + lonkkaArvot[emänLonkka]) / 2;
+        const keskiarvoIndeksi = Math.round(keskiarvo);
+        
+        // Painotetaan tuloksia keskiarvon ympärille
+        painotukset[käänteisArvot[keskiarvoIndeksi]] = 40;
+        if (keskiarvoIndeksi > 0) painotukset[käänteisArvot[keskiarvoIndeksi-1]] = 25;
+        if (keskiarvoIndeksi < 4) painotukset[käänteisArvot[keskiarvoIndeksi+1]] = 25;
+        
+        // Loput jakautuvat muille arvoille
+        Object.keys(painotukset).forEach(arvo => {
+            if (painotukset[arvo] === 0) painotukset[arvo] = 5;
+        });
+    } else {
+        // Jos vain toinen vanhempi tiedossa, painotetaan sen tuloksen ympärille
+        const tiedossaOlevaLonkka = isänLonkka || emänLonkka;
+        const indeksi = lonkkaArvot[tiedossaOlevaLonkka];
+        
+        painotukset[tiedossaOlevaLonkka] = 35;
+        if (indeksi > 0) painotukset[käänteisArvot[indeksi-1]] = 25;
+        if (indeksi < 4) painotukset[käänteisArvot[indeksi+1]] = 25;
+        
+        // Loput jakautuvat muille arvoille
+        Object.keys(painotukset).forEach(arvo => {
+            if (painotukset[arvo] === 0) painotukset[arvo] = 7.5;
+        });
+    }
+    
+    return painotukset;
+}
+
 // Result generation functions
 function generoiYksittäinenNivelTulos(tyyppi) {
     return painotettuSatunnainen('nivelArvot').tulos;
 }
 
 function generoiYksittäinenLonkkaTulos() {
-    return painotettuSatunnainen('lonkkaArvot').tulos;
+    const vasenPainotukset = laskeVanhempienVaikutusLonkkiin('vasen');
+    const oikeaPainotukset = laskeVanhempienVaikutusLonkkiin('oikea');
+    
+    function generoiPuoli(painotukset) {
+        if (!painotukset) {
+            return painotettuSatunnainen('lonkkaArvot').tulos;
+        }
+        
+        const muokatutArvot = Object.entries(painotukset).map(([tulos, todennäköisyys]) => ({
+            tulos,
+            todennäköisyys
+        }));
+        
+        const summa = muokatutArvot.reduce((acc, curr) => acc + curr.todennäköisyys, 0);
+        let satunnainen = Math.random() * summa;
+        
+        for (let arvo of muokatutArvot) {
+            if (satunnainen < arvo.todennäköisyys) {
+                return arvo.tulos;
+            }
+            satunnainen -= arvo.todennäköisyys;
+        }
+        
+        return muokatutArvot[0].tulos;
+    }
+    
+    const vasen = generoiPuoli(vasenPainotukset);
+    const oikea = generoiPuoli(oikeaPainotukset);
+    
+    return `${vasen}/${oikea}`;
 }
 
 function generoiSilmäTulos() {
@@ -85,12 +164,15 @@ function asetaNivelTulokset(tyyppi) {
 }
 
 function asetaLonkkaTulokset() {
-    const vasen = generoiYksittäinenLonkkaTulos();
-    const oikea = generoiYksittäinenLonkkaTulos();
+    const [vasen, oikea] = generoiYksittäinenLonkkaTulos().split('/');
     
-    document.getElementById('lonkka-tulos').textContent = `${vasen}/${oikea}`;
+    document.getElementById('lonkka-tulos').textContent = `${vasen}${oikea ? '/' + oikea : ''}`;
     document.getElementById('lonkka-vasen-tulkinta').textContent = tulkinnat.lonkka[vasen];
-    document.getElementById('lonkka-oikea-tulkinta').textContent = tulkinnat.lonkka[oikea];
+    if (oikea) {
+        document.getElementById('lonkka-oikea-tulkinta').textContent = tulkinnat.lonkka[oikea];
+    } else {
+        document.getElementById('lonkka-oikea-tulkinta').textContent = tulkinnat.lonkka[vasen];
+    }
 }
 
 function asetaTulokset(tyyppi) {
@@ -143,10 +225,9 @@ function asetaTulokset(tyyppi) {
 
 // Initialize application
 function initializeApp() {
-    // Add breed selection
-    //const breedSelectionHTML = createBreedSelectionTemplate();
+    // Add breed selection to breedSelection div
     const breedSelectionContainer = document.getElementById('breedSelection');
-breedSelectionContainer.innerHTML = createBreedSelectionTemplate();
+    breedSelectionContainer.innerHTML = createBreedSelectionTemplate();
 
     // Add breed selection event listener
     document.getElementById('breed-select').addEventListener('change', (e) => {

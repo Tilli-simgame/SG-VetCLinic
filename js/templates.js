@@ -1,14 +1,63 @@
-// Template for breed selection
+// Template for breed selection and parent information
 function createBreedSelectionTemplate() {
+  const lonkkaVaihtoehdot = `
+      <option value="">-</option>
+      <option value="A">A</option>
+      <option value="B">B</option>
+      <option value="C">C</option>
+      <option value="D">D</option>
+      <option value="E">E</option>
+  `;
+
   return `
       <div class="mb-6">
           <label class="block text-sm font-medium text-gray-700 mb-2">Valitse rotu:</label>
-          <select id="breed-select" class="w-full p-2 border rounded-md">
-              <option value="">Oletus</option>
+          <select id="breed-select" class="w-full p-2 border rounded-md mb-4">
+              <option value="">Valitse rotu</option>
               ${Object.entries(breedWeights).map(([key, rotu]) => 
                   `<option value="${key}">${rotu.nimi}</option>`
               ).join('')}
           </select>
+
+          <div class="mt-4">
+              <h3 class="text-sm font-medium text-gray-700 mb-2">Vanhempien lonkkatulokset:</h3>
+              <div class="grid grid-cols-2 gap-4">
+                  <div>
+                      <label class="block text-sm text-gray-600 mb-1">Isän lonkat:</label>
+                      <div class="flex gap-2">
+                          <div>
+                              <label class="block text-xs text-gray-500 mb-1">Vasen</label>
+                              <select id="father-hips-left" class="w-full p-2 border rounded-md">
+                                  ${lonkkaVaihtoehdot}
+                              </select>
+                          </div>
+                          <div>
+                              <label class="block text-xs text-gray-500 mb-1">Oikea</label>
+                              <select id="father-hips-right" class="w-full p-2 border rounded-md">
+                                  ${lonkkaVaihtoehdot}
+                              </select>
+                          </div>
+                      </div>
+                  </div>
+                  <div>
+                      <label class="block text-sm text-gray-600 mb-1">Emän lonkat:</label>
+                      <div class="flex gap-2">
+                          <div>
+                              <label class="block text-xs text-gray-500 mb-1">Vasen</label>
+                              <select id="mother-hips-left" class="w-full p-2 border rounded-md">
+                                  ${lonkkaVaihtoehdot}
+                              </select>
+                          </div>
+                          <div>
+                              <label class="block text-xs text-gray-500 mb-1">Oikea</label>
+                              <select id="mother-hips-right" class="w-full p-2 border rounded-md">
+                                  ${lonkkaVaihtoehdot}
+                              </select>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
       </div>
   `;
 }
